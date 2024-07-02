@@ -1,17 +1,18 @@
 // src/services/User.service.ts
 import { CreateUserDto } from '../models/dto/user.dto';
 import { User } from '../models/entities/user';
-import UserRepository from '../models/repositories/user.repository';
+import { UserRepository}  from '../models/repositories/user.repository';
 import { Repository, getCustomRepository } from 'typeorm';
 import crypto from 'crypto'
 import Jimp from 'jimp';
 import { v4 } from 'uuid';
+import { GenericRepository } from '../models/repositories/generic.repository';
 
 export class UserService {
-  private userRepository: Repository<User>;
+  private userRepository: GenericRepository<User>;
 
   constructor() {
-    this.userRepository = UserRepository;
+    this.userRepository = new UserRepository();
   }
 
   async createUser(file: Express.Multer.File, userDto: CreateUserDto): Promise<User> {
@@ -24,7 +25,7 @@ export class UserService {
   }
 
   async getAllUsers(): Promise<User[]> {
-    return await this.userRepository.find();
+    return await this.userRepository.findAll();
   }
 
   async getUserById(id: string): Promise<User | null> {
@@ -41,14 +42,14 @@ export class UserService {
   }
 
   async deleteUser(id: string): Promise<boolean> {
-    const result = await this.userRepository.delete(id);
-    return result.affected === 1;
+    return await this.userRepository.removeBy(id);
+    
   }
 
   private async saveImage(image: Express.Multer.File): Promise<string> {
     const savedImage = await Jimp.read(image.path);
     savedImage.resize(600, 600);
-    const savedImageFileName = `pic_${v4()}_${Date.now}.png`
+    const savedImageFileName = `pic_${v4()}_${Date.now()}.png`
     savedImage.write(`uploads/${savedImageFileName}`);
     return Promise.resolve(savedImageFileName);
 
