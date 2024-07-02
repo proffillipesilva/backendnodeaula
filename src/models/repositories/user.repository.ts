@@ -1,6 +1,10 @@
 // src/repositories/example.repository.ts
 import { User } from '../entities/user';
 import AppDataSource from '../../data-source';
+import { GenericRepository } from './generic.repository';
 
-const UserRepository = AppDataSource.getRepository(User)
-export default UserRepository;
+export class UserRepository extends GenericRepository<User> {
+    constructor(){
+        super(AppDataSource.getRepository(User))
+    }
+}

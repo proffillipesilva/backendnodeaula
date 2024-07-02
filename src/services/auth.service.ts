@@ -1,17 +1,18 @@
 
 import { Repository } from "typeorm";
 import { User } from "../models/entities/user";
-import UserRepository from "../models/repositories/user.repository";
+import { UserRepository } from "../models/repositories/user.repository";
 import { LoginDto } from "../models/dto/login.dto";
 import * as jwt from 'jsonwebtoken';
 import logger from "../middlewares/logger";
 import crypto from 'crypto'
+import { GenericRepository } from "../models/repositories/generic.repository";
 
 export class AuthService {
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: GenericRepository<User>
 
     constructor(){
-        this.userRepository = UserRepository;
+        this.userRepository = new UserRepository();
     }
 
     async login(dto: LoginDto): Promise<string> {

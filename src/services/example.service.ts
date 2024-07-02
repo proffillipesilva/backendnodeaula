@@ -1,13 +1,14 @@
 // src/services/example.service.ts
 import { Example } from '../models/entities/example';
-import ExampleRepository from '../models/repositories/example.repository';
+import {ExampleRepository} from '../models/repositories/example.repository';
 import { Repository } from 'typeorm';
+import { GenericRepository } from '../models/repositories/generic.repository';
 
 export class ExampleService {
-  private exampleRepository: Repository<Example>;
+  private exampleRepository: GenericRepository<Example>;
 
   constructor() {
-    this.exampleRepository = ExampleRepository;
+    this.exampleRepository = new ExampleRepository();
   }
 
   async createExample(name: string): Promise<Example> {
@@ -17,7 +18,7 @@ export class ExampleService {
   }
 
   async getAllExamples(): Promise<Example[]> {
-    return await this.exampleRepository.find();
+    return await this.exampleRepository.findAll();
   }
 
   async getExampleById(id: number): Promise<Example | null> {
@@ -34,7 +35,7 @@ export class ExampleService {
   }
 
   async deleteExample(id: number): Promise<boolean> {
-    const result = await this.exampleRepository.delete(id);
-    return result.affected === 1;
+    return await this.exampleRepository.removeBy(id);
+    
   }
 }

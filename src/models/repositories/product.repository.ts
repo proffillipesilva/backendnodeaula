@@ -1,11 +1,11 @@
 // src/repositories/example.repository.ts
-import { Example } from '../entities/example';
 import AppDataSource from '../../data-source';
 import { GenericRepository } from './generic.repository';
+import { Product } from '../entities/product';
 
 
-export class ExampleRepository extends GenericRepository<Example> {
+export class ProductRepository extends GenericRepository<Product> {
     constructor(){
-        super(AppDataSource.getRepository(Example))
+        super(AppDataSource.getRepository(Product))
     }
 }
